@@ -1,7 +1,7 @@
 {
   "id": "vaugustos-symbiont-class-race",
-  "title": "Symbiont class Feature",
-  "version": "1.0.2",
+  "title": "Symbiont Class Feature",
+  "version": "1.1",
   "authors": "vaugusto273",
   "esmodules": ["scripts/biological.js"],
   "styles": ["css/styles.css"],
