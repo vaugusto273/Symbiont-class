@@ -20,7 +20,7 @@ Hooks.once("ready", async () => {
                 activation: { type: "passive" },
                 uses: { value: 10, max: "@scale.symbiont.Adappoints", per: "sr" } // Configuração inicial
             },
-            img: "icons/skills/biology/heart-organ-green.webp" // Ícone para o item
+            img: "icons/magic/nature/plant-undersea-orb-purple.webp" // Ícone para o item
         });
         console.log(`Biological Points Module | Item "${FEATURE_NAME}" criado na aba de Itens.`);
     } else {
