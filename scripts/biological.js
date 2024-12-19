@@ -3,43 +3,38 @@
 // Define o nome da Feature
 const FEATURE_NAME = "Biological Points";
 
-// Evento ao inicializar o módulo
-Hooks.on("ready", async () => {
-    console.log("Biological Points Module | Iniciando módulo...");
+// Cria o item global ao inicializar o módulo
+Hooks.once("ready", async () => {
+    console.log("Biological Points Module | Iniciando...");
 
-    // Itera sobre todas as fichas de jogadores e cria a feature, se necessário
-    for (let actor of game.actors.filter(a => a.type === "character")) {
-        await ensureFeatureExists(actor);
-    }
+    // Verifica se o item já existe na aba de Itens do Foundry
+    const existingItem = game.items.getName(FEATURE_NAME);
 
-    console.log("Biological Points Module | Verificação e criação da feature concluída.");
-});
-
-// Garante que a feature existe na ficha do ator
-async function ensureFeatureExists(actor) {
-    const existingFeature = actor.items.find(i => i.name === FEATURE_NAME && i.type === "feat");
-
-    if (!existingFeature) {
-        await actor.createEmbeddedDocuments("Item", [{
+    if (!existingItem) {
+        // Cria o item global na aba "Itens"
+        await Item.create({
             name: FEATURE_NAME,
-            type: "feat",
+            type: "feat", // Tipo de item: feat (habilidade)
             system: {
-                description: { value: "Gera Pontos Biológicos para a barra adicional." },
+                description: { value: "Gera Pontos Biológicos para uso em fichas." },
                 activation: { type: "passive" },
-                uses: { value: 10, max: 10, per: "day" }
-            }
-        }]);
-        console.log(`Biological Points Module | Feature adicionada a: ${actor.name}`);
+                uses: { value: 10, max: "@scale.symbiont.Adappoints", per: "sr" } // Configuração inicial
+            },
+            img: "icons/skills/biology/heart-organ-green.webp" // Ícone para o item
+        });
+        console.log(`Biological Points Module | Item "${FEATURE_NAME}" criado na aba de Itens.`);
+    } else {
+        console.log(`Biological Points Module | O item "${FEATURE_NAME}" já existe.`);
     }
-}
+});
 
 // Adiciona a barra na interface das fichas com a feature
 Hooks.on("renderActorSheet", (sheet, html, data) => {
     const actor = sheet.actor;
 
-    // Verifica se o ator possui a feature
-    const bioFeature = actor.items.find(i => i.name === FEATURE_NAME && i.type === "feat");
-    if (!bioFeature) return; // Sai se a feature não existir
+    // Verifica se o ator possui o item correspondente
+    const bioFeature = actor.items?.find(i => i.name === FEATURE_NAME && i.type === "feat");
+    if (!bioFeature) return; // Sai se o item não existir
 
     // Valores para a barra
     const bioPoints = bioFeature.system.uses?.value || 0;
@@ -52,7 +47,7 @@ Hooks.on("renderActorSheet", (sheet, html, data) => {
             <span>${FEATURE_NAME}</span>
         </div>
         <div class="meter sectioned bio-points">
-            <div class="progress bio-points" role="meter" aria-valuemin="0" aria-valuenow="${bioPoints}" aria-valuemax="${bioPointsMax}" style="--bar-percentage: ${(bioPoints / bioPointsMax) * 100}%">
+            <div class="progress bio-points" role="meter" aria-valuemin="0" aria-valuenow="${bioPoints}" aria-valuemax="${bioPointsMax}" style="width: ${(bioPoints / bioPointsMax) * 100}%">
                 <div class="label">
                     <span class="value">${bioPoints}</span>
                     <span class="separator">/</span>
