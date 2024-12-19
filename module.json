@@ -1,0 +1,16 @@
+{
+  "id": "symbiont-class-module",
+  "title": "Symbiont class Feature",
+  "description": "Assets for homebrew Symbiont class.",
+  "version": "1.0.0",
+  "authors": "Vaugusto273",
+  "esmodules": ["scripts/biological.js"],
+  "styles": ["css/styles.css"],
+  "compatibility": {
+    "minimum": "11",
+    "maximum": "12",
+    "verified": "12.331"
+  },
+  "manifest": "",
+  "download": ""
+}
